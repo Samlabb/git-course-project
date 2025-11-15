@@ -35,6 +35,9 @@ public class Journal {
                     String text = Stream.of(args).skip(1).collect(Collectors.joining(" "));
                     addEntry(text);
                     break;
+                case "list":
+                    listEntries();
+                    break;
                 default:
                     System.out.println("Неизвестная команда: " + command);
             }
@@ -50,4 +53,17 @@ public class Journal {
         System.out.println("Запись успешно добавлена.");
     }
 
+    public static List<String> listEntries() throws IOException {
+        Path path = Paths.get(JOURNAL_FILE);
+        if (!Files.exists(path)) {
+            System.out.println("Дневник пуст.");
+            return Collections.emptyList();
+        }
+
+        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+        System.out.println("--- Записи дневника ---");
+        lines.forEach(System.out::println);
+        System.out.println("-----------------------");
+        return lines;
+    }
 }
